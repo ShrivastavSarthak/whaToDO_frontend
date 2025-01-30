@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { loginSchema, signupSchema } from "@/shared/schemas/formSchema";
 import { useState } from "react";
+import { usePostMethodMutation } from "@/shared/utils/services/dataServices";
 
 export function Auth() {
   const [isSignUp, setIsSignup] = useState(false);
@@ -30,19 +31,31 @@ export function Auth() {
     },
   });
 
+  const [auth, { isError, isLoading }] = usePostMethodMutation();
+
   const handleSignUp = () => {
     setIsSignup(!isSignUp);
   };
 
-  function onSubmit(data: z.infer<typeof schema>) {
+  const onSubmit = async (data: z.infer<typeof schema>) => {
+    const response = await auth({
+      httpResponse: {
+        reqType: "POST",
+        url: isSignUp ? "user/signup" : "user/login",
+      },
+      payload: data,
+    });
+
     console.log(data);
-  }
+  };
   return (
-    <Card>
+    <Card className="w-[25rem] mx-2">
       <CardHeader className="flex flex-col items-center">
-        <h2>Welcome to TaskNest</h2>
-        <h3 className="font-bold">{isSignUp ? "Login" : "Signup"}</h3>
+        <h3>
+          Welcome to <span className="font-extrabold">TaskNest</span>
+        </h3>
       </CardHeader>
+      <h5 className="font-bold text-center">{isSignUp ? "Login" : "Signup"}</h5>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="">
@@ -52,7 +65,7 @@ export function Auth() {
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full Name</FormLabel>
+                    <FormLabel className="mt-2">Full Name</FormLabel>
                     <FormControl>
                       <Input placeholder="Name" {...field} />
                     </FormControl>
@@ -66,7 +79,7 @@ export function Auth() {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="mt-2">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="jhon@gmail.com" {...field} />
@@ -80,7 +93,7 @@ export function Auth() {
                 control={form.control}
                 name="username"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="mt-2">
                     <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input placeholder="shadcn" {...field} />
@@ -95,7 +108,7 @@ export function Auth() {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="mt-2">
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="Password" {...field} />
@@ -109,12 +122,12 @@ export function Auth() {
                 control={form.control}
                 name="confirmPassword"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
+                  <FormItem className="mt-2">
+                    <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Password"
+                        placeholder="Confirm Password"
                         {...field}
                       />
                     </FormControl>
