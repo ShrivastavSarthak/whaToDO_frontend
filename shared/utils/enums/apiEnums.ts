@@ -33,9 +33,10 @@ export enum AuthApiUrl {
 }
 
 export enum LoginApiUrls {
-  SignIn = "user/users/login",
-  SignUp = "user/users/signup",
-  SocialLogin = "user/users/social-login",
+  childSignup = "user/signup",
+  childSignin = "user/signin",
+  parentSignup = "/pUser/parent-login",
+  parentSignin = "/pUser/parent-signup",
 }
 //TODO: this will be going into project url
 export enum ContactUsApiUrls {
