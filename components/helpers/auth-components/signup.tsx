@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 function ChildSignup() {
   const form = useForm<z.infer<typeof ChildSignupSchema>>({
@@ -45,6 +46,7 @@ function ChildSignup() {
   const [auth, { isError, isLoading }] = usePostMethodMutation();
 
   const onSubmit = async (data: z.infer<typeof ChildSignupSchema>) => {
+    toast.success("signup successfully");
     const sendData = {
       username: data.username,
       password: data.password,
@@ -83,7 +85,11 @@ function ChildSignup() {
             <FormItem className="mt-2">
               <FormLabel>Phone No.</FormLabel>
               <FormControl>
-                <Input placeholder="5567845356" {...field} />
+                <Input
+                  disabled={isLoading}
+                  placeholder="5567845356"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -161,6 +167,8 @@ function ParentSignup() {
   const [auth, { isError, isLoading }] = usePostMethodMutation();
 
   const onSubmit = async (data: z.infer<typeof ParentSignupSchema>) => {
+    console.log(data);
+    toast.success("signup successfully");
     const sendData = {
       username: data.username,
       password: data.password,
@@ -188,7 +196,11 @@ function ParentSignup() {
             <FormItem className="mt-2">
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="jhon_2234" {...field} />
+                <Input
+                  disabled={isLoading}
+                  placeholder="jhon_2234"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -201,7 +213,11 @@ function ParentSignup() {
             <FormItem className="mt-2">
               <FormLabel>Phone No.</FormLabel>
               <FormControl>
-                <Input placeholder="5567845356" {...field} />
+                <Input
+                  disabled={isLoading}
+                  placeholder="5567845356"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -215,7 +231,11 @@ function ParentSignup() {
             <FormItem className="mt-2">
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="jhon@gmail.com" {...field} />
+                <Input
+                  disabled={isLoading}
+                  placeholder="jhon@gmail.com"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -226,7 +246,7 @@ function ParentSignup() {
           name="gender"
           disabled={isLoading}
           render={({ field }) => (
-            <Select>
+            <Select disabled={isLoading} onValueChange={field.onChange}>
               <Label className="mt-2">Gender</Label>
               <SelectTrigger className="w-full ">
                 <SelectValue placeholder="Male" />
@@ -246,7 +266,7 @@ function ParentSignup() {
           name="occupation"
           disabled={isLoading}
           render={({ field }) => (
-            <Select>
+            <Select disabled={isLoading} onValueChange={field.onChange}>
               <Label className="mt-2">Occupation</Label>
               <SelectTrigger className="w-full ">
                 <SelectValue placeholder="Government" />
@@ -306,7 +326,7 @@ function ParentSignup() {
 
 export default function Signup() {
   return (
-    <Tabs defaultValue="child" className="mt-2">
+    <Tabs defaultValue="parent" className="mt-2">
       <TabsList className="grid w-full gap-1 grid-cols-2 bg-gray-600 rounded-lg p-1">
         <TabsTrigger
           value="parent"
