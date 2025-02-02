@@ -14,22 +14,26 @@ export function Auth() {
   };
 
   return (
-    <Card className="w-[25rem] mx-2">
-      <CardHeader className="flex flex-col items-center">
-        <h3>
-          Welcome to <span className="font-extrabold">TaskNest</span>
-        </h3>
-      </CardHeader>
-      <h5 className="font-bold text-center">{isSignUp ? "Login" : "Signup"}</h5>
-      <CardContent>
-        {isSignUp ? <Signin /> : <Signup />}
-        <p className="text-center m-2">
-          {!isSignUp ? "Already have an account?" : "New to TaskNest?"}{" "}
-          <Button onClick={handleSignUp} variant="link">
-            {isSignUp ? "Sign Up" : "Login"}
-          </Button>{" "}
-        </p>
-      </CardContent>
-    </Card>
+    <div className="flex items-start justify-center   overflow-y-auto w-full h-screen p-2 ">
+      <Card className="w-full max-w-[30rem] shadow-lg p-4 my-[3%]">
+        <CardHeader className="flex flex-col items-center">
+          <h2 className=" font-semibold">
+            Welcome to <span className="font-extrabold">TaskNest</span>
+          </h2>
+          <h3 className="font-bold text-center">
+            {isSignUp ? "Login" : "Signup"}
+          </h3>
+        </CardHeader>
+        <CardContent className="">
+          {isSignUp ? <Signin /> : <Signup />}
+          <p className="text-center mt-4">
+            {!isSignUp ? "Already have an account?" : "New to TaskNest?"}{" "}
+            <Button onClick={handleSignUp} variant="link">
+              {isSignUp ? "Sign Up" : "Login"}
+            </Button>
+          </p>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
