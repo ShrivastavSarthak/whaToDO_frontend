@@ -46,7 +46,6 @@ function ChildSignup() {
   const [auth, { isError, isLoading }] = usePostMethodMutation();
 
   const onSubmit = async (data: z.infer<typeof ChildSignupSchema>) => {
-    toast.success("signup successfully");
     const sendData = {
       username: data.username,
       password: data.password,
@@ -60,6 +59,16 @@ function ChildSignup() {
       },
       payload: sendData,
     });
+
+    if (response.data?.statusCode === 201) {
+      toast.success("signup successfully");
+      return;
+    }
+    const error =
+      (response.error as any)?.data?.message ||
+      "Something went wrong please try again!";
+    toast.error(error);
+    return;
   };
   return (
     <Form {...form}>

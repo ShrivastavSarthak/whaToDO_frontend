@@ -13,7 +13,7 @@ export const apiResponse = (
       url,
       method: reqType,
       headers: {
-        "x-auth-token": headers,
+        Authorization: `Bearer ${headers}`,
       },
     };
   }
@@ -21,9 +21,10 @@ export const apiResponse = (
     url,
     method: reqType,
     headers: {
-      "x-auth-token": headers,
+      Authorization: `Bearer ${headers}`,
     },
     body,
+    
   };
 };
 

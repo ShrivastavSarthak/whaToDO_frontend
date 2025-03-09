@@ -4,6 +4,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import localStorage from "redux-persist/es/storage";
 import { DataServices } from "../utils/services/dataServices";
+import { userSlice } from "./slices/user-slice";
 // import { projectSlice } from "./slices/projectslice";
 
 const persistConfig = {
@@ -13,7 +14,7 @@ const persistConfig = {
 };
 
 const Reducer = combineReducers({
-//   user: userSlice.reducer,
+  user: userSlice.reducer,
 //   tagSlice: tagSlice.reducer,
 //   project: projectSlice.reducer,
   [DataServices.reducerPath]: DataServices.reducer,
