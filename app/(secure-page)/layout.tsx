@@ -17,6 +17,10 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import moment from "moment";
 
 import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:3000");
+
 const SecurePageLayout = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [count, setCount] = useState(30);
@@ -29,6 +33,24 @@ const SecurePageLayout = ({ children }: { children: React.ReactNode }) => {
       headers: user.token,
     },
   });
+
+  const listenIsUserVerified = () => {
+    console.log("listen");
+
+    socket.on(`emailVerified:${user.userId}`, () => {
+      console.log("socket on");
+      setIsOpen(false);
+    });
+
+    return () => {
+      console.log("socket off");
+      socket.off(`emailVerified:${user.userId}`);
+    };
+  };
+
+  useEffect(() => {
+    listenIsUserVerified();
+  }, []);
 
   const [
     trigger,

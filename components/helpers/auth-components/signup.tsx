@@ -30,6 +30,9 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { useAppDispatch } from "@/shared/utils/hooks/redux-hook";
+import { useAuth } from "@/shared/utils/hooks/user-validate";
+import { setToken, setUser } from "@/shared/store/slices/user-slice";
 
 function ChildSignup() {
   const form = useForm<z.infer<typeof ChildSignupSchema>>({
@@ -45,6 +48,8 @@ function ChildSignup() {
 
   const [auth, { isError, isLoading }] = usePostMethodMutation();
 
+  const dispatch = useAppDispatch();
+  const { login } = useAuth();
   const onSubmit = async (data: z.infer<typeof ChildSignupSchema>) => {
     const sendData = {
       username: data.username,
@@ -62,6 +67,12 @@ function ChildSignup() {
 
     if (response.data?.statusCode === 201) {
       toast.success("signup successfully");
+      dispatch(setUser(response.data?.response?.user_id));
+      dispatch(setToken(response.data?.response?.access_token));
+      login(
+        response.data?.response?.access_token,
+        response.data?.response?.user_id
+      );
       return;
     }
     const error =
