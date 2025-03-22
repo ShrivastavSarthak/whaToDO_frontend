@@ -19,6 +19,10 @@ import { useState } from "react";
 import { usePostMethodMutation } from "@/shared/utils/services/dataServices";
 import { LoginApiUrls } from "@/shared/utils/enums/apiEnums";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { toast } from "sonner";
+import { useAuth } from "@/shared/utils/hooks/user-validate";
+import { useAppDispatch } from "@/shared/utils/hooks/redux-hook";
+import { setToken, setUser } from "@/shared/store/slices/user-slice";
 
 function ChildSignin() {
   const form = useForm<z.infer<typeof SigninSchema>>({
@@ -30,7 +34,8 @@ function ChildSignin() {
   });
 
   const [auth, { isError, isLoading }] = usePostMethodMutation();
-
+  const { login } = useAuth();
+  const dispatch = useAppDispatch();
   const onSubmit = async (data: z.infer<typeof SigninSchema>) => {
     const response = await auth({
       httpResponse: {
@@ -39,6 +44,24 @@ function ChildSignin() {
       },
       payload: data,
     });
+
+
+    if (response.data?.statusCode === 201) {
+      toast.success("Login successful");
+      dispatch(setUser(response.data?.response?.user_id));
+      dispatch(setToken(response.data?.response?.access_token));
+      login(
+        response.data?.response?.access_token,
+        response.data?.response?.user_id
+      );
+
+      return;
+    }
+    const error =
+      (response.error as any)?.data?.message ||
+      "Something went wrong please try again!";
+    toast.error(error);
+    return;
   };
 
   return (

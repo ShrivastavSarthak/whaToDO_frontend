@@ -34,4 +34,4 @@ export const DataServices = createApi({
   }),
 });
 
-export const { usePostMethodMutation, useGetMethodQuery } = DataServices;
+export const { usePostMethodMutation, useGetMethodQuery, useLazyGetMethodQuery } = DataServices;

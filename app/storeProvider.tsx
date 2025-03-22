@@ -1,5 +1,6 @@
 "use client";
 
+import { AuthProvider } from "@/shared/context/auth-context";
 import store from "@/shared/store/store";
 import { Provider } from "react-redux";
 import persistStore from "redux-persist/es/persistStore";
@@ -16,8 +17,7 @@ export default function StoreProvider({
     <Provider store={store}>
       {" "}
       <PersistGate persistor={persister} loading={null}>
-        {children}
-        
+        <AuthProvider>{children}</AuthProvider>
       </PersistGate>
     </Provider>
   );
