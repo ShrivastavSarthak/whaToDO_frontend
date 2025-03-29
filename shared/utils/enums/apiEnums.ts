@@ -30,8 +30,8 @@ export enum ApiMethod {
 export enum LoginApiUrls {
   childSignup = "user/signup",
   childSignin = "user/signin",
-  parentSignup = "/pUser/parent-login",
-  parentSignin = "/pUser/parent-signup",
+  parentSignup = "/pUser/parent-signup",
+  parentSignin = "/pUser/parent-login",
   childVerify = "/user/verify",
 }
 
