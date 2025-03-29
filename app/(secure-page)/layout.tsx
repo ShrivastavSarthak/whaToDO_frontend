@@ -1,121 +1,24 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import {
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-} from "@/components/ui/dialog";
-import TnModal from "@/lib/wrapper/Tn_modal";
-import { ApiMethod, childApiUrls } from "@/shared/utils/enums/apiEnums";
-import { useAppSelector } from "@/shared/utils/hooks/redux-hook";
-import {
-  useGetMethodQuery,
-  useLazyGetMethodQuery,
-} from "@/shared/utils/services/dataServices";
-import { StringFormatService } from "@/shared/utils/services/stringFormatService";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import moment from "moment";
+import { AppSidebar } from "@/components/helpers/sideBar/app-sidebar";
+import VerificationCard from "@/components/helpers/verificationCard";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { cookies } from "next/headers";
+import { ReactNode } from "react";
 
-import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
+export default async function Layout({ children }: { children: ReactNode }) {
+  const cookieStore = await cookies();
 
-const socket = io("http://localhost:3000");
-
-const SecurePageLayout = ({ children }: { children: React.ReactNode }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [count, setCount] = useState(30);
-  const user = useAppSelector((state) => state.user);
-
-  const { data, refetch, error } = useGetMethodQuery({
-    httpResponse: {
-      reqType: ApiMethod.GET,
-      url: StringFormatService(childApiUrls.getChildById, [user.userId]),
-      headers: user.token,
-    },
-  });
-
-  const listenIsUserVerified = () => {
-    console.log("listen");
-
-    socket.on(`emailVerified:${user.userId}`, () => {
-      console.log("socket on");
-      setIsOpen(false);
-    });
-
-    return () => {
-      console.log("socket off");
-      socket.off(`emailVerified:${user.userId}`);
-    };
-  };
-
-  useEffect(() => {
-    listenIsUserVerified();
-  }, []);
-
-  const [
-    trigger,
-    {
-      data: emailData,
-      isError: isEmailError,
-      isLoading: isEmailLoading,
-      isSuccess: isEmailSuccess,
-    },
-  ] = useLazyGetMethodQuery();
-
-  const sendEmail = () => {
-    trigger({
-      httpResponse: {
-        reqType: ApiMethod.GET,
-        url: StringFormatService(childApiUrls.childResendEmail, [user.userId]),
-        headers: user.token,
-      },
-    });
-  };
-
-  useEffect(() => {
-    if ((error as FetchBaseQueryError)?.status === 403) {
-      sendEmail();
-      setIsOpen(true);
-      return;
-    }
-    setIsOpen(false);
-  }, [data, error]);
-
-  useEffect(() => {
-    if (count > 0) {
-      const interval = setInterval(() => {
-        setCount((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [count]);
-
-  const handleResendEmail = async () => {
-    refetch();
-    setCount(30);
-  };
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   return (
     <div>
-      {children}
-      <TnModal isOpen={isOpen}>
-        <DialogHeader>Verify Account</DialogHeader>
-        <DialogDescription>
-          You did not verify your email. Please verify your email to continue.
-        </DialogDescription>
-        <DialogFooter className="flex justify-end items-center">
-          <p>Resend email in {moment.utc(count * 1000).format("mm:ss")}</p>
-          <Button
-            disabled={count !== 0 || isEmailLoading}
-            onClick={handleResendEmail}
-            variant={"link"}
-          >
-            {isEmailLoading ? "sending" : "Resend email"}
-          </Button>
-        </DialogFooter>
-      </TnModal>
+      <SidebarProvider defaultOpen={defaultOpen}>
+        <AppSidebar />
+        <div className="w-full m-2">
+          <SidebarTrigger />
+          {children}
+        </div>
+      </SidebarProvider>
+      <VerificationCard />
     </div>
   );
-};
-
-export default SecurePageLayout;
+}

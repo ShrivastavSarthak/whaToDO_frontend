@@ -23,6 +23,7 @@ export const ChildSignupSchema = z
 
 export const ParentSignupSchema = z
   .object({
+    name: z.string().min(3, "name is required"),
     username: z.string().min(3, "Username is required"),
     email: z.string().email("Invalid email address"),
     phoneNo: z.string().min(10, "Phone number is required"),

@@ -45,7 +45,6 @@ function ChildSignin() {
       payload: data,
     });
 
-
     if (response.data?.statusCode === 201) {
       toast.success("Login successful");
       dispatch(setUser(response.data?.response?.user_id));
@@ -116,6 +115,9 @@ function ParentSignin() {
 
   const [auth, { isError, isLoading }] = usePostMethodMutation();
 
+  const { login } = useAuth();
+  const dispatch = useAppDispatch();
+
   const onSubmit = async (data: z.infer<typeof SigninSchema>) => {
     const response = await auth({
       httpResponse: {
@@ -124,6 +126,23 @@ function ParentSignin() {
       },
       payload: data,
     });
+
+    if (response.data?.statusCode === 201) {
+      toast.success("Login successful");
+      dispatch(setUser(response.data?.response?.user_id));
+      dispatch(setToken(response.data?.response?.access_token));
+      login(
+        response.data?.response?.access_token,
+        response.data?.response?.user_id
+      );
+
+      return;
+    }
+    const error =
+      (response.error as any)?.data?.message ||
+      "Something went wrong please try again!";
+    toast.error(error);
+    return;
   };
 
   return (

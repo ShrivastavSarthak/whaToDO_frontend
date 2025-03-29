@@ -184,12 +184,14 @@ function ParentSignup() {
     },
   });
 
-  const [auth, { isError, isLoading }] = usePostMethodMutation();
 
+  const [auth, { isError, isLoading }] = usePostMethodMutation();
+  const { login } = useAuth();
+  const dispatch = useAppDispatch();
   const onSubmit = async (data: z.infer<typeof ParentSignupSchema>) => {
     console.log(data);
-    toast.success("signup successfully");
     const sendData = {
+      name: data.name,
       username: data.username,
       password: data.password,
       email: data.email,
@@ -200,14 +202,55 @@ function ParentSignup() {
     const response = await auth({
       httpResponse: {
         reqType: "POST",
-        url: LoginApiUrls.childSignup,
+        url: LoginApiUrls.parentSignup,
       },
       payload: sendData,
     });
+
+    if (response.data?.statusCode === 201) {
+      toast.success("signup successfully");
+      dispatch(setUser(response.data?.response?.user_id));
+      dispatch(setToken(response.data?.response?.access_token));
+      login(
+        response.data?.response?.access_token,
+        response.data?.response?.user_id
+      );
+      return;
+    }
+    const error =
+      (response.error as any)?.data?.message ||
+      "Something went wrong please try again!";
+    toast.error(error);
+    return;
+
+
+
+
   };
+
+
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="name"
+          disabled={isLoading}
+          render={({ field }) => (
+            <FormItem className="mt-2">
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input
+                  disabled={isLoading}
+                  placeholder="John"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="username"
@@ -218,7 +261,7 @@ function ParentSignup() {
               <FormControl>
                 <Input
                   disabled={isLoading}
-                  placeholder="jhon_2234"
+                  placeholder="john_2234"
                   {...field}
                 />
               </FormControl>
