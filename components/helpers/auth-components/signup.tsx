@@ -32,7 +32,8 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useAppDispatch } from "@/shared/utils/hooks/redux-hook";
 import { useAuth } from "@/shared/utils/hooks/user-validate";
-import { setToken, setUser } from "@/shared/store/slices/user-slice";
+import { UserInterface } from "@/shared/utils/interfaces/user-interface";
+import { setUser } from "@/shared/store/slices/user-slice";
 
 function ChildSignup() {
   const form = useForm<z.infer<typeof ChildSignupSchema>>({
@@ -67,12 +68,13 @@ function ChildSignup() {
 
     if (response.data?.statusCode === 201) {
       toast.success("signup successfully");
-      dispatch(setUser(response.data?.response?.user_id));
-      dispatch(setToken(response.data?.response?.access_token));
-      login(
-        response.data?.response?.access_token,
-        response.data?.response?.user_id
-      );
+      const user: UserInterface = {
+        id: response.data?.response?.user_id,
+        role: response.data?.response?.role,
+        token: response.data?.response?.access_token,
+      };
+      dispatch(setUser(user));
+      login(user);
       return;
     }
     const error =
@@ -184,7 +186,6 @@ function ParentSignup() {
     },
   });
 
-
   const [auth, { isError, isLoading }] = usePostMethodMutation();
   const { login } = useAuth();
   const dispatch = useAppDispatch();
@@ -209,12 +210,13 @@ function ParentSignup() {
 
     if (response.data?.statusCode === 201) {
       toast.success("signup successfully");
-      dispatch(setUser(response.data?.response?.user_id));
-      dispatch(setToken(response.data?.response?.access_token));
-      login(
-        response.data?.response?.access_token,
-        response.data?.response?.user_id
-      );
+      const user: UserInterface = {
+        id: response.data?.response?.user_id,
+        role: response.data?.response?.role,
+        token: response.data?.response?.access_token,
+      };
+      dispatch(setUser(user));
+      login(user);
       return;
     }
     const error =
@@ -222,13 +224,7 @@ function ParentSignup() {
       "Something went wrong please try again!";
     toast.error(error);
     return;
-
-
-
-
   };
-
-
 
   return (
     <Form {...form}>
@@ -241,11 +237,7 @@ function ParentSignup() {
             <FormItem className="mt-2">
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input
-                  disabled={isLoading}
-                  placeholder="John"
-                  {...field}
-                />
+                <Input disabled={isLoading} placeholder="John" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

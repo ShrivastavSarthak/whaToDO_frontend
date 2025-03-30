@@ -1,4 +1,4 @@
-import { BarChartComponent } from "@/components/helpers/dashboard/barGraph";
+import BarChartComponent  from "@/components/helpers/dashboard/barGraph";
 import Streaks from "@/components/helpers/dashboard/streaks";
 import TaskReport from "@/components/helpers/dashboard/taskReport";
 
