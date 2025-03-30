@@ -28,14 +28,21 @@ export enum ApiMethod {
 
 
 export enum LoginApiUrls {
-  childSignup = "user/signup",
-  childSignin = "user/signin",
+  childSignup = "child/signup",
+  childSignin = "child/signin",
   parentSignup = "/pUser/parent-signup",
   parentSignin = "/pUser/parent-login",
-  childVerify = "/user/verify",
 }
 
-export enum childApiUrls{
-  getChildById = "user/{0}",
-  childResendEmail = "user/resend-verification-mail/{0}",
+export enum childApiUrls {
+  getChildById = "child/{0}",
+  childResendEmail = "child/resend-verification-mail/{0}",
+}
+
+export enum commonUrls{
+  verifyUser = "user/verify",
+}
+export enum parentApiUrls{
+  getParentById = "puser/{0}",
+  parentResendEmail = "puser/resend-verification-mail/{0}",
 }

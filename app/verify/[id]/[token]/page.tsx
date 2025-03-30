@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ApiMethod, LoginApiUrls } from "@/shared/utils/enums/apiEnums";
+import { ApiMethod, commonUrls, LoginApiUrls } from "@/shared/utils/enums/apiEnums";
 import { usePostMethodMutation } from "@/shared/utils/services/dataServices";
 import { toast } from "sonner";
 
@@ -17,7 +17,7 @@ export default function Verify({
     const res :any = await verification({
       httpResponse: {
         reqType: ApiMethod.POST,
-        url: LoginApiUrls.childVerify,
+        url: commonUrls.verifyUser,
       },
       payload: {
         id: params.id,

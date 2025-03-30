@@ -2,14 +2,13 @@ import { userEnums } from "../enums/user-enums";
 
 export interface UserInterface {
   id: string;
-  name: string;
-  email: string;
   role: userEnums.PARENT | userEnums.CHILDREN;
+  token: string;
 }
 
 export interface AuthContextProps {
-  user: UserInterface | null;
+  currentUser: UserInterface | null;
   loading: boolean;
-  login: (token: string, userData: UserInterface) => void;
+  login: (userData: UserInterface) => void;
   logout: () => void;
 }

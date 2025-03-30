@@ -1,17 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import {
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
 } from "@/components/ui/dialog";
 import TnModal from "@/lib/wrapper/Tn_modal";
-import { ApiMethod, childApiUrls } from "@/shared/utils/enums/apiEnums";
+import { childApiUrls, parentApiUrls } from "@/shared/utils/enums/apiEnums";
+import { userEnums } from "@/shared/utils/enums/user-enums";
+import { useLazyGetApi } from "@/shared/utils/hooks/lazyGetApi";
 import { useAppSelector } from "@/shared/utils/hooks/redux-hook";
-import {
-    useGetMethodQuery,
-    useLazyGetMethodQuery,
-} from "@/shared/utils/services/dataServices";
 import { StringFormatService } from "@/shared/utils/services/stringFormatService";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import moment from "moment";
@@ -19,67 +17,67 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:3000");
+const socket = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 
 export default function VerificationCard() {
   const [isOpen, setIsOpen] = useState(false);
   const [count, setCount] = useState(30);
   const user = useAppSelector((state) => state.user);
 
-  const { data, refetch, error } = useGetMethodQuery({
-    httpResponse: {
-      reqType: ApiMethod.GET,
-      url: StringFormatService(childApiUrls.getChildById, [user.userId]),
-      headers: user.token,
-    },
-  });
+  const {
+    data: emailData,
+    error: isEmailError,
+    getApi: getEmail,
+    isLoading: isEmailLoading,
+  } = useLazyGetApi();
+
+  const {
+    getApi: getUser,
+    data: userData,
+    error: isUserError,
+    isLoading: isUserLoading,
+  } = useLazyGetApi();
+
+  const chooseAndGetUser = () => {
+    const userUrl =
+      user.role === userEnums.PARENT
+        ? StringFormatService(parentApiUrls.getParentById, [user.id])
+        : StringFormatService(childApiUrls.getChildById, [user.id]);
+
+    getUser(userUrl);
+  };
 
   const listenIsUserVerified = () => {
-    console.log("listen");
-
-    socket.on(`emailVerified:${user.userId}`, () => {
-      console.log("socket on");
+    socket.on(`emailVerified:${user.id}`, () => {
       setIsOpen(false);
     });
 
     return () => {
-      console.log("socket off");
-      socket.off(`emailVerified:${user.userId}`);
+      socket.off(`emailVerified:${user.id}`);
     };
   };
 
   useEffect(() => {
     listenIsUserVerified();
+    chooseAndGetUser();
   }, []);
 
-  const [
-    trigger,
-    {
-      data: emailData,
-      isError: isEmailError,
-      isLoading: isEmailLoading,
-      isSuccess: isEmailSuccess,
-    },
-  ] = useLazyGetMethodQuery();
-
   const sendEmail = () => {
-    trigger({
-      httpResponse: {
-        reqType: ApiMethod.GET,
-        url: StringFormatService(childApiUrls.childResendEmail, [user.userId]),
-        headers: user.token,
-      },
-    });
+    const userUrl =
+      user.role === userEnums.PARENT
+        ? StringFormatService(parentApiUrls.parentResendEmail, [user.id])
+        : StringFormatService(childApiUrls.childResendEmail, [user.id]);
+    getEmail(userUrl, user.token);
   };
 
   useEffect(() => {
-    if ((error as FetchBaseQueryError)?.status === 403) {
+    if ((isUserError as FetchBaseQueryError)?.status === 403 && !isOpen) {
       sendEmail();
       setIsOpen(true);
       return;
     }
     setIsOpen(false);
-  }, [data, error]);
+  }, [userData, isUserError]);
 
   useEffect(() => {
     if (count > 0) {
@@ -91,7 +89,7 @@ export default function VerificationCard() {
   }, [count]);
 
   const handleResendEmail = async () => {
-    refetch();
+    sendEmail();
     setCount(30);
   };
 

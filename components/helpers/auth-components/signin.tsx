@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 // import { signupSchema } from "../shared/schema/formSchema";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -14,15 +13,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SigninSchema, ChildSignupSchema } from "@/shared/schemas/formSchema";
-import { useState } from "react";
-import { usePostMethodMutation } from "@/shared/utils/services/dataServices";
+import { SigninSchema } from "@/shared/schemas/formSchema";
+import { setUser } from "@/shared/store/slices/user-slice";
 import { LoginApiUrls } from "@/shared/utils/enums/apiEnums";
+import { useAppDispatch } from "@/shared/utils/hooks/redux-hook";
+import { useAuth } from "@/shared/utils/hooks/user-validate";
+import { UserInterface } from "@/shared/utils/interfaces/user-interface";
+import { usePostMethodMutation } from "@/shared/utils/services/dataServices";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { toast } from "sonner";
-import { useAuth } from "@/shared/utils/hooks/user-validate";
-import { useAppDispatch } from "@/shared/utils/hooks/redux-hook";
-import { setToken, setUser } from "@/shared/store/slices/user-slice";
 
 function ChildSignin() {
   const form = useForm<z.infer<typeof SigninSchema>>({
@@ -47,13 +46,13 @@ function ChildSignin() {
 
     if (response.data?.statusCode === 201) {
       toast.success("Login successful");
-      dispatch(setUser(response.data?.response?.user_id));
-      dispatch(setToken(response.data?.response?.access_token));
-      login(
-        response.data?.response?.access_token,
-        response.data?.response?.user_id
-      );
-
+      const user: UserInterface = {
+        id: response.data?.response?.user_id,
+        role: response.data?.response?.role,
+        token: response.data?.response?.access_token,
+      };
+      dispatch(setUser(user));
+      login(user);
       return;
     }
     const error =
@@ -129,12 +128,15 @@ function ParentSignin() {
 
     if (response.data?.statusCode === 201) {
       toast.success("Login successful");
-      dispatch(setUser(response.data?.response?.user_id));
-      dispatch(setToken(response.data?.response?.access_token));
-      login(
-        response.data?.response?.access_token,
-        response.data?.response?.user_id
-      );
+
+      const user: UserInterface = {
+        id: response.data?.response?.user_id,
+        role: response.data?.response?.role,
+        token: response.data?.response?.access_token,
+      };
+      dispatch(setUser(user));
+
+      login(user);
 
       return;
     }
@@ -156,7 +158,7 @@ function ParentSignin() {
             <FormItem className="mt-2">
               <FormLabel>Username or email</FormLabel>
               <FormControl>
-                <Input placeholder="jhon_2234" {...field} />
+                <Input placeholder="John_2234" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
