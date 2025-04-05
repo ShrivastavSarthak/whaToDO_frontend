@@ -18,7 +18,7 @@ import { setUser } from "@/shared/store/slices/user-slice";
 import { LoginApiUrls } from "@/shared/utils/enums/apiEnums";
 import { useAppDispatch } from "@/shared/utils/hooks/redux-hook";
 import { useAuth } from "@/shared/utils/hooks/user-validate";
-import { UserInterface } from "@/shared/utils/interfaces/user-interface";
+import { UserInterface } from "@/shared/utils/interfaces/user_interface";
 import { usePostMethodMutation } from "@/shared/utils/services/dataServices";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { toast } from "sonner";

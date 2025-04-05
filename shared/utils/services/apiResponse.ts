@@ -1,5 +1,5 @@
 import { StatusCode } from "../enums/apiEnums";
-import { optionParams, ResponseInterface } from "../interfaces/apiInterface";
+import { optionParams, ResponseInterface } from "../interfaces/api_interface";
 import { UrlFormatService } from "./stringFormatService";
 
 export const apiResponse = (
