@@ -1,4 +1,4 @@
-import { optionParams } from "../interfaces/apiInterface";
+import { optionParams } from "../interfaces/api_interface";
 
 export function StringFormatService(str: string, args: string[]): string {
   if (!args) {

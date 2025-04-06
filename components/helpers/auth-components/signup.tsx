@@ -32,7 +32,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useAppDispatch } from "@/shared/utils/hooks/redux-hook";
 import { useAuth } from "@/shared/utils/hooks/user-validate";
-import { UserInterface } from "@/shared/utils/interfaces/user-interface";
+import { UserInterface } from "@/shared/utils/interfaces/user_interface";
 import { setUser } from "@/shared/store/slices/user-slice";
 
 function ChildSignup() {

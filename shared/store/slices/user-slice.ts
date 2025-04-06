@@ -1,4 +1,4 @@
-import { UserInterface } from "@/shared/utils/interfaces/user-interface";
+import { UserInterface } from "@/shared/utils/interfaces/user_interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const InitialState: UserInterface = {

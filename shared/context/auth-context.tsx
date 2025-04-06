@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import {
   AuthContextProps,
   UserInterface,
-} from "../utils/interfaces/user-interface";
+} from "../utils/interfaces/user_interface";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { useAppDispatch } from "../utils/hooks/redux-hook";

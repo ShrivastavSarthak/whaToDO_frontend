@@ -1,7 +1,7 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { apiResponse, responseWrapper } from "./apiResponse";
-import { HttpRequest, ResponseInterface } from "../interfaces/apiInterface";
+import { HttpRequest, ResponseInterface } from "../interfaces/api_interface";
 import { baseUrl } from "../enums/apiEnums";
 
 export const DataServices = createApi({
