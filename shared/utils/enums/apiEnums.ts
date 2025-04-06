@@ -37,6 +37,7 @@ export enum LoginApiUrls {
 export enum childApiUrls {
   getChildById = "child/{0}",
   childResendEmail = "child/resend-verification-mail/{0}",
+  postChildTask = "api/v1/task/create_task",
 }
 
 export enum commonUrls{

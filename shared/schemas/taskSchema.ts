@@ -6,6 +6,6 @@ export const TaskSchema = z.object({
   created_by: z.string().min(1, "Creator is required"),
   updated_by: z.string().min(1, "Creator is required"),
   started_at: z.date(),
-  point: z.string(),
+  points: z.string(),
   media: z.any().optional(),
 });
