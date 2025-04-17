@@ -16,24 +16,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<UserInterface | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   useEffect(() => {
     const token = Cookies.get("token");
     const userId = Cookies.get("userId");
     const role = Cookies.get("role");
+    const homeId = Cookies.get("homeId");
 
     if (token && userId && role) {
       const user: UserInterface = {
-          id: userId,
+        id: userId,
         token: token,
         role: role as UserInterface["role"],
-        }
-      dispatch(setUser(user))
-      
+        homeId: Cookies.get("homeId") || "",
+      };
+      dispatch(setUser(user));
+
       setCurrentUser({
         id: userId,
         token: token,
         role: role as UserInterface["role"],
+        homeId: homeId || "",
       });
     }
 
@@ -44,8 +47,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.set("token", userData.token, { expires: 1 });
     Cookies.set("userId", userData.id, { expires: 1 });
     Cookies.set("role", userData.role, { expires: 1 });
+    Cookies.set("homeId", userData.homeId, { expires: 1 });
     setCurrentUser(userData);
-    router.push("/dashboard");
+    if (!userData.homeId) {
+      router.push("/create_home");
+    } else {
+      router.push("/dashboard");
+    }
   };
 
   const logout = () => {
@@ -62,4 +70,3 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     </AuthContext.Provider>
   );
 };
-

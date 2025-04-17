@@ -50,6 +50,7 @@ function ChildSignin() {
         id: response.data?.response?.user_id,
         role: response.data?.response?.role,
         token: response.data?.response?.access_token,
+        homeId: response.data?.response?.homeId,
       };
       dispatch(setUser(user));
       login(user);
@@ -133,6 +134,7 @@ function ParentSignin() {
         id: response.data?.response?.user_id,
         role: response.data?.response?.role,
         token: response.data?.response?.access_token,
+        homeId: response.data?.response?.homeId,
       };
       dispatch(setUser(user));
 

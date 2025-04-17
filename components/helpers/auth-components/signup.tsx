@@ -72,6 +72,7 @@ function ChildSignup() {
         id: response.data?.response?.user_id,
         role: response.data?.response?.role,
         token: response.data?.response?.access_token,
+        homeId: response.data?.response?.homeId,
       };
       dispatch(setUser(user));
       login(user);
@@ -214,6 +215,7 @@ function ParentSignup() {
         id: response.data?.response?.user_id,
         role: response.data?.response?.role,
         token: response.data?.response?.access_token,
+        homeId: response.data?.response?.homeId,
       };
       dispatch(setUser(user));
       login(user);

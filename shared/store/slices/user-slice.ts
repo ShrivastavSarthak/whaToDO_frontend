@@ -5,6 +5,7 @@ const InitialState: UserInterface = {
   id: "",
   role: "" as UserInterface["role"],
   token: "",
+  homeId: "",
 };
 
 
@@ -16,6 +17,7 @@ export const userSlice = createSlice({
       state.id = action.payload.id;
       state.role = action.payload.role;
       state.token = action.payload.token;
+      state.homeId = action.payload.homeId;
     },
   },
 });
