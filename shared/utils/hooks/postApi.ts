@@ -15,7 +15,7 @@ export default function usePostApi() {
     method: ApiMethod;
     payload: any;
   }) => {
-    await postApi({
+    const res =await postApi({
       httpResponse: {
         reqType: method,
         url,
@@ -23,7 +23,11 @@ export default function usePostApi() {
       },
       payload,
     });
+
+    return res;
   };
+
+  
 
   return { postApiCall, isError, isLoading, isSuccess, data };
 }
