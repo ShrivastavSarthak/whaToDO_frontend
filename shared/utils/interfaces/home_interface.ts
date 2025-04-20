@@ -2,6 +2,6 @@
 
 export interface HomeInterface {
     homeName: string;
-    homeDetails: string;
+    homeDesc: string;
     homePhoto?: string;
 }

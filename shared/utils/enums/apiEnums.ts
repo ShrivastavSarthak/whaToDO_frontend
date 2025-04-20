@@ -47,3 +47,7 @@ export enum parentApiUrls{
   getParentById = "puser/{0}",
   parentResendEmail = "puser/resend-verification-mail/{0}",
 }
+
+export enum HomeApiUrls {
+  createHome = "home/create-home",
+}

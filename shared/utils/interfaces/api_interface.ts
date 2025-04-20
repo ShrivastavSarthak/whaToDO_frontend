@@ -12,7 +12,7 @@ export interface HttpRequest {
 export interface ResponseInterface {
   response: any;
   statusCode: number;
-  error?: any;
+  error?: any
 }
 
 export interface ApiResponse {

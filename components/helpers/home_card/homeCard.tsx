@@ -12,10 +12,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { HomeSchema } from "@/shared/schemas/homeSchema";
+import { ApiMethod, HomeApiUrls } from "@/shared/utils/enums/apiEnums";
+import usePostApi from "@/shared/utils/hooks/postApi";
+import { useAppSelector } from "@/shared/utils/hooks/redux-hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 function InviteFamily() {
@@ -82,15 +86,31 @@ function CreateHome({
     resolver: zodResolver(HomeSchema),
     defaultValues: {
       homeName: "",
-      homeDetails: "",
+      homeDesc: "",
       homePhoto: "",
     },
   });
+  const user = useAppSelector((state) => state.user);
+  const isHomeCreated = usePostApi();
 
   const onFormSubmit = async (formData: z.infer<typeof HomeSchema>) => {
-    console.log(formData);
-    setIsHomeCreate(true);
+    const sendData = { leader: user.id, ...formData };
+    const resData = await isHomeCreated.postApiCall({
+      url: HomeApiUrls.createHome,
+      method: ApiMethod.POST,
+      payload: sendData,
+    });
+    if (resData.data?.statusCode === 201) {
+      toast.success("Home created successfully");
+      setIsHomeCreate(true);
+    } else {
+      const errorMessage: any = resData.error;
+      toast.error(errorMessage?.data?.message || "Something went wrong");
+    }
+
+    form.reset();
   };
+
   return (
     <Card className="w-full max-w-[30rem] shadow-lg p-4 my-[3%]">
       <CardHeader>
@@ -112,7 +132,7 @@ function CreateHome({
               )}
             />
             <FormField
-              name="homeDetails"
+              name="homeDesc"
               render={({ field }) => (
                 <FormItem className="mt-2">
                   <FormLabel>Home description</FormLabel>
@@ -138,8 +158,12 @@ function CreateHome({
                 </FormItem>
               )}
             />
-            <Button type="submit" className="mt-3 w-full">
-              Submit
+            <Button
+              disabled={isHomeCreated.isLoading}
+              type="submit"
+              className="mt-3 w-full"
+            >
+              {isHomeCreated.isLoading ? "Creating..." : "Create Home"}
             </Button>
           </form>
         </Form>
