@@ -21,57 +21,16 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Invites } from "@/components/helpers/my_peoples/inviteMembers";
 
-function InviteFamily() {
-  const form = useForm();
-  const [inviteEmail, setInviteEmail] = useState<string>("");
-  const onPartnerInvite = () => {
-    console.log(inviteEmail);
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInviteEmail(e.target.value);
-  };
+export function InviteFamily() {
   return (
     <Card className="w-full max-w-[30rem] shadow-lg p-1 my-[1%]">
       <CardHeader className="flex flex-col items-start justify-start">
         <h2>Invite Your Family</h2>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <div className="mt-3">
-            <FormLabel>Invite your partner </FormLabel>
-            <div className="flex w-full  items-center space-x-2 mt-2">
-              <Input onChange={handleEmailChange} placeholder="Email" />
-              <Button type="button" onClick={onPartnerInvite} className="py-1">
-                Invite
-              </Button>
-            </div>
-          </div>
-          <div className="mt-3">
-            <FormLabel>Invite your Childrens</FormLabel>
-            <div className="w-full space-x-2 mt-2">
-              <Input onChange={handleEmailChange} placeholder="Email" />
-              <div className="flex items-center justify-between mt-3">
-                <div className="mb-3">
-                  <Link
-                    href={"/dashboard"}
-                    className="text-[1rem] hover:underline text-gray-500"
-                  >
-                    Skip
-                  </Link>
-                </div>
-                <Button
-                  type="button"
-                  onClick={onPartnerInvite}
-                  className="py-1"
-                >
-                  Invite children
-                </Button>
-              </div>
-            </div>
-          </div>
-        </Form>
+        <Invites />
       </CardContent>
     </Card>
   );

@@ -1,7 +1,7 @@
+import InviteMembers from "@/components/helpers/my_peoples/inviteMembers";
 import MyPeoplesDataTables, {
   MyPeoplesDataColumns,
 } from "@/components/helpers/my_peoples/myPoplesDataTable";
-import { Button } from "@/components/ui/button";
 
 // TODO: DUMMY DATA DELETED AFTER THE API CALL
 const myPeoplesDummyData = [
@@ -52,7 +52,7 @@ export default function MyPeoples() {
     <div className="mx-3">
       <div className="flex items-end  justify-between mb-4">
         <h3 className="font-semibold ">My peoples</h3>
-        <Button >Invite Members</Button>
+        <InviteMembers />
       </div>
       <MyPeoplesDataTables
         columns={MyPeoplesDataColumns}
