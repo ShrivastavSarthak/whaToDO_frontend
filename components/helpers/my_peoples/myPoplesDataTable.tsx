@@ -1,54 +1,78 @@
-"use client"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import {ColumnDef, flexRender, getCoreRowModel, useReactTable} from "@tanstack/react-table";
+"use client";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { myTableInterface } from "@/shared/utils/interfaces/my_table_interface";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
-// TODO:CHANGE ANY TO THE INTERFACE
-export const MyPeoplesDataColumns: ColumnDef<any>[] = [
-    {
-        accessorKey: 'name',
-        header: "Name"
+export const MyPeoplesDataColumns: ColumnDef<myTableInterface>[] = [
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "isConnected",
+    header: "Invitation status",
+  },
+  {
+    accessorKey: "Withdrawal Invitation",
+    cell: ({ row }) => {
+      const id = row.getValue("_id");
+      return (
+        <Button size={"sm"} onClick={() => console.log(id)}>
+          Withdraw
+        </Button>
+      );
     },
-    {
-        accessorKey: 'email',
-        header: "Email"
+  },
+  {
+    accessorKey: "Resend Invitation",
+    cell: ({ row }) => {
+      const id = row.getValue("_id");
+      return (
+        <Button size={"sm"} onClick={() => console.log(id)}>
+          Resend Invitation{" "}
+        </Button>
+      );
     },
-    {
-        accessorKey: 'isConnected',
-        header: "Invitation status"
-    },
-    {
-        accessorKey: 'withdrawalInvitation',
-        header: "Withdrawal Invitation"
-    },
-    {
-        accessorKey: 'resendInvitation',
-        header: "Resend Invitation"
-    },
-    {
-        accessorKey: 'InvitationSendDate',
-        header: "Invitation Send On"
-    },
-]
-
-
+  },
+  {
+    accessorKey: "InvitationSendDate",
+    header: "Invitation Send On",
+  },
+];
 
 export default function MyPeoplesDataTables({
   columns,
   data,
 }: {
-    //TODO: SAME HERE!!
-    columns: ColumnDef<any>[]
-    data: any[]
+  //TODO: SAME HERE!!
+  columns: ColumnDef<any>[];
+  data: any[];
 }) {
-
-    const table = useReactTable({
+  const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  })
-    
-    return(
-        <div className="rounded-md border">
+  });
+
+  return (
+    <div className="rounded-md border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -63,7 +87,7 @@ export default function MyPeoplesDataTables({
                           header.getContext()
                         )}
                   </TableHead>
-                )
+                );
               })}
             </TableRow>
           ))}
@@ -92,5 +116,5 @@ export default function MyPeoplesDataTables({
         </TableBody>
       </Table>
     </div>
-    )
+  );
 }
