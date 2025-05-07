@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { ImCross } from "react-icons/im";
 import { toast } from "sonner";
 
-export function Invites({isApiLoading}:{isApiLoading: (loading:boolean)=> void}) {
+export function Invites({isApiLoading}:{isApiLoading?: (loading:boolean)=> void}) {
   const form = useForm();
   const [parentInviteEmail, setParentInviteEmail] = useState<string>("");
   const [inviteChildEmail, setInviteChildEmail] = useState<string>("");
@@ -50,7 +50,9 @@ export function Invites({isApiLoading}:{isApiLoading: (loading:boolean)=> void})
   };
 
   useEffect(()=>{
-    isApiLoading(isLoading)
+    if (isApiLoading) {
+      isApiLoading(isLoading)
+    }
   },[isLoading])
 
   const onPartnerInvite = async() => {
