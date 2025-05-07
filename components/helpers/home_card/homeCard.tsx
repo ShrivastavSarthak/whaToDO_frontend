@@ -30,7 +30,7 @@ export function InviteFamily() {
         <h2>Invite Your Family</h2>
       </CardHeader>
       <CardContent>
-        <Invites />
+        <Invites/>
       </CardContent>
     </Card>
   );
