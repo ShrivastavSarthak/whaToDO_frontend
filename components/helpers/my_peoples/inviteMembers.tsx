@@ -3,16 +3,23 @@ import { Button } from "@/components/ui/button";
 import { Form, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import TnModal from "@/lib/wrapper/Tn_modal";
-import { useRef, useState } from "react";
+import { ApiMethod, InviteMembersUrls } from "@/shared/utils/enums/apiEnums";
+import usePostApi from "@/shared/utils/hooks/postApi";
+import { useAppSelector } from "@/shared/utils/hooks/redux-hook";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ImCross } from "react-icons/im";
+import { toast } from "sonner";
 
-export function Invites() {
+export function Invites({isApiLoading}:{isApiLoading: (loading:boolean)=> void}) {
   const form = useForm();
   const [parentInviteEmail, setParentInviteEmail] = useState<string>("");
   const [inviteChildEmail, setInviteChildEmail] = useState<string>("");
   const [inviteChildrenEmail, setInviteChildrenEmail] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const homeId = useAppSelector((state) => state.user.homeId);
+  const {data,isLoading,postApiCall}= usePostApi()
+
   const isEmailValid = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
@@ -41,8 +48,27 @@ export function Invites() {
   const removeChildrenEmail = (index: Number) => {
     setInviteChildrenEmail(inviteChildrenEmail.filter((_, i) => i !== index));
   };
-  const onPartnerInvite = () => {
-    console.log(parentInviteEmail);
+
+  useEffect(()=>{
+    isApiLoading(isLoading)
+  },[isLoading])
+
+  const onPartnerInvite = async() => {
+    
+    const res = await postApiCall({
+      method: ApiMethod.POST,
+      url: InviteMembersUrls.invitePartner,
+      payload: {
+        homeId:homeId,
+        email: parentInviteEmail,
+      },
+    })
+    
+    if(res.data?.statusCode === 201){
+      toast.success(res.data?.response?.message ?? "Partner Invited successfully")
+      setParentInviteEmail("")
+    }
+
   };
 
   const handleParentEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,8 +78,21 @@ export function Invites() {
     setInviteChildEmail(e.target.value);
   };
 
-  const OnChildInvites = ()=>{
-    console.log(inviteChildrenEmail);
+  const OnChildInvites = async()=>{
+    
+    const res = await postApiCall({
+      method: ApiMethod.POST,
+      url: InviteMembersUrls.invitePartner,
+      payload: {
+        homeId:homeId,
+        email: inviteChildrenEmail,
+      },
+    })
+    
+    if(res.data?.statusCode === 201){
+      toast.success(res.data?.response?.message ?? "Childrens Invited successfully")
+      setInviteChildrenEmail([])
+    }
     
   }
 
@@ -63,8 +102,8 @@ export function Invites() {
       <div className="mt-3">
         <FormLabel>Invite your partner </FormLabel>
         <div className="flex w-full  items-center space-x-2 mt-2">
-          <Input onChange={handleParentEmailChange} placeholder="Email" />
-          <Button type="button" onClick={onPartnerInvite} className="py-1">
+          <Input value={parentInviteEmail} onChange={handleParentEmailChange} placeholder="Email" />
+          <Button disabled={isLoading} type="button" onClick={onPartnerInvite} className="py-1">
             Invite
           </Button>
         </div>
@@ -98,7 +137,7 @@ export function Invites() {
             placeholder="Email"
           />
           <div className="flex items-center justify-between mt-3">
-            <Button type="button" onClick={OnChildInvites} className="py-1">
+            <Button disabled={isLoading} type="button" onClick={OnChildInvites} className="py-1">
               Invite children
             </Button>
           </div>
@@ -115,14 +154,22 @@ function InviteModal({
   isOpen: boolean;
   closeInviteModal: (close: boolean) => void;
 }) {
-  const handleClose = () => {
-    closeInviteModal(false);
+  const [isApiLoading, setIsApiLoading] = useState(true);
+  const handleLoading = (loading: boolean) => {
+    setIsApiLoading(!loading);
   };
+  
+  const handleClose = () => {
+    if(isApiLoading){
+      closeInviteModal(false);
+    }
+  };
+
 
   return (
     <TnModal className="rounded-md" isOpen={isOpen} handleClose={handleClose}>
       <h2 className="font-semibold">Invite Your Family</h2>
-      <Invites />
+      <Invites isApiLoading={handleLoading} />
     </TnModal>
   );
 }
