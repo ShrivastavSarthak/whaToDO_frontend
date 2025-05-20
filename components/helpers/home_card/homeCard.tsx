@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { HomeSchema } from "@/shared/schemas/homeSchema";
 import { ApiMethod, HomeApiUrls } from "@/shared/utils/enums/apiEnums";
 import usePostApi from "@/shared/utils/hooks/postApi";
-import { useAppSelector } from "@/shared/utils/hooks/redux-hook";
+import { useAppDispatch, useAppSelector } from "@/shared/utils/hooks/redux-hook";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -22,7 +22,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Invites } from "@/components/helpers/my_peoples/inviteMembers";
-
+import Cookies from "js-cookie";
+import { setUser } from "@/shared/store/slices/user-slice";
 export function InviteFamily() {
   return (
     <Card className="w-full max-w-[30rem] shadow-lg p-1 my-[1%]">
@@ -51,6 +52,7 @@ function CreateHome({
   });
   const user = useAppSelector((state) => state.user);
   const isHomeCreated = usePostApi();
+  const dispatch = useAppDispatch()
 
   const onFormSubmit = async (formData: z.infer<typeof HomeSchema>) => {
     const sendData = { leader: user.id, ...formData };
@@ -61,6 +63,8 @@ function CreateHome({
     });
     if (resData.data?.statusCode === 201) {
       toast.success("Home created successfully");
+      Cookies.set("homeId", resData.data?.response?.data?._id, { expires: 1 });
+      dispatch(setUser({...user,homeId: resData.data?.response?.data?._id}))
       setIsHomeCreate(true);
     } else {
       const errorMessage: any = resData.error;

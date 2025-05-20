@@ -53,6 +53,6 @@ export enum HomeApiUrls {
 }
 
 export enum InviteMembersUrls {
-  invitePartner = "/api/v1/pUser/parent/invite",
-  inviteChildrens = "/api/v1/pUser/child/invite",
+  invitePartner = "/api/v1/pTask/parent/invite",
+  inviteChildrens = "/api/v1/pTask/child/invite",
 }
