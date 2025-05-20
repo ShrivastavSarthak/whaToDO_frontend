@@ -84,10 +84,10 @@ export function Invites({isApiLoading}:{isApiLoading?: (loading:boolean)=> void}
     
     const res = await postApiCall({
       method: ApiMethod.POST,
-      url: InviteMembersUrls.invitePartner,
+      url: InviteMembersUrls.inviteChildrens,
       payload: {
         homeId:homeId,
-        email: inviteChildrenEmail,
+        emails: inviteChildrenEmail,
       },
     })
     
