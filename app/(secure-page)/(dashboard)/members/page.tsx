@@ -1,53 +1,38 @@
+"use client";
 import InviteMembers from "@/components/helpers/my_peoples/inviteMembers";
 import MyPeoplesDataTables, {
   MyPeoplesDataColumns,
 } from "@/components/helpers/my_peoples/myPoplesDataTable";
+import { ApiMethod, InviteMembersUrls } from "@/shared/utils/enums/apiEnums";
+import { useLazyGetApi } from "@/shared/utils/hooks/lazyGetApi";
+import { useAppSelector } from "@/shared/utils/hooks/redux-hook";
+import { myTableInterface } from "@/shared/utils/interfaces/my_table_interface";
+import { useGetMethodQuery } from "@/shared/utils/services/dataServices";
+import { StringFormatService } from "@/shared/utils/services/stringFormatService";
+import { useEffect, useState } from "react";
 
-// TODO: DUMMY DATA DELETED AFTER THE API CALL
-const myPeoplesDummyData = [
-  {
-    name: "Alice Johnson",
-    email: "alice.johnson@example.com",
-    isConnected: "Connected",
-    withdrawalInvitation: "Withdraw",
-    resendInvitation: "Resend",
-    InvitationSendDate: "2025-04-10",
-  },
-  {
-    name: "Bob Smith",
-    email: "bob.smith@example.com",
-    isConnected: "Pending",
-    withdrawalInvitation: "Withdraw",
-    resendInvitation: "Resend",
-    InvitationSendDate: "2025-03-28",
-  },
-  {
-    name: "Charlie Brown",
-    email: "charlie.brown@example.com",
-    isConnected: "Not Connected",
-    withdrawalInvitation: "Withdraw",
-    resendInvitation: "Resend",
-    InvitationSendDate: "2025-02-15",
-  },
-  {
-    name: "Diana Prince",
-    email: "diana.prince@example.com",
-    isConnected: "Connected",
-    withdrawalInvitation: "Withdraw",
-    resendInvitation: "Resend",
-    InvitationSendDate: "2025-01-09",
-  },
-  {
-    name: "Ethan Hunt",
-    email: "ethan.hunt@example.com",
-    isConnected: "Pending",
-    withdrawalInvitation: "Withdraw",
-    resendInvitation: "Resend",
-    InvitationSendDate: "2024-12-22",
-  },
-];
 
 export default function MyPeoples() {
+
+  const [invitedMembers, setInvitedMembers] = useState<myTableInterface[]>([]);
+  const user = useAppSelector((state) => state.user);
+  
+  const {data:getMembers, isError,isLoading,}= useGetMethodQuery({
+    httpResponse:{
+      reqType: ApiMethod.GET,
+      url: StringFormatService(InviteMembersUrls.getInvites,[user.homeId]),
+      headers: user.token,
+    }
+  })
+
+  useEffect(()=>{
+    if(getMembers){
+      setInvitedMembers(getMembers?.response?.invites)
+    }
+  },[isLoading,getMembers])
+  
+
+
   return (
     <div className="mx-3">
       <div className="flex items-end  justify-between mb-4">
@@ -56,7 +41,7 @@ export default function MyPeoples() {
       </div>
       <MyPeoplesDataTables
         columns={MyPeoplesDataColumns}
-        data={myPeoplesDummyData}
+        data={invitedMembers}
       />
     </div>
   );

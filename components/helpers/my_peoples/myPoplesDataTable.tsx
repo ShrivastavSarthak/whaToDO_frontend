@@ -15,45 +15,66 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import moment from "moment";
+import { ResendInvite, WithdrawalInvites } from "./withdrawal_resend_popUp";
+import { useState } from "react";
 
 export const MyPeoplesDataColumns: ColumnDef<myTableInterface>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
   {
     accessorKey: "email",
     header: "Email",
   },
   {
-    accessorKey: "isConnected",
+    accessorKey: "roleAssigned",
+    header: "Role Assigned",
+  },
+  {
+    accessorKey: "status",
     header: "Invitation status",
   },
   {
     accessorKey: "Withdrawal Invitation",
     cell: ({ row }) => {
-      const id = row.getValue("_id");
+      const id = row.original._id;
+      const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+      const handleClose = (data:boolean) => {
+        setIsModalOpen(data);
+      };
       return (
-        <Button size={"sm"} onClick={() => console.log(id)}>
+        <>
+        <Button size={"sm"} onClick={() =>{setIsModalOpen(true)} }>
           Withdraw
         </Button>
+        <WithdrawalInvites id={id} isOpen={isModalOpen} handleModalClose={handleClose}  />
+        </>
       );
     },
   },
   {
     accessorKey: "Resend Invitation",
     cell: ({ row }) => {
-      const id = row.getValue("_id");
+      const id = row.original._id;
+      const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+      const handleClose = (data:boolean) => {
+        setIsModalOpen(data);
+      };
       return (
-        <Button size={"sm"} onClick={() => console.log(id)}>
-          Resend Invitation{" "}
+        <>
+        <Button size={"sm"} onClick={() =>{setIsModalOpen(true)} }>
+          Resend invite
         </Button>
+        <ResendInvite id={id} isOpen={isModalOpen} handleModalClose={handleClose}  />
+        </>
       );
     },
   },
   {
-    accessorKey: "InvitationSendDate",
-    header: "Invitation Send On",
+    accessorKey: "created_at",
+    header: "Invited Date",
+    cell: ({ row }) => {
+      return moment(row.getValue("created_at")).format("YYYY-MM-DD") 
+
+    }
   },
 ];
 

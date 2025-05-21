@@ -1,7 +1,9 @@
 export interface myTableInterface {
-  _id: string;
-  name: string;
+  created_at: string;
   email: string;
+  homeId: string;
+  roleAssigned: string;
   status: string;
-  invitationDate: string;
+  _id: string;
+  [key: string]: any;
 }
