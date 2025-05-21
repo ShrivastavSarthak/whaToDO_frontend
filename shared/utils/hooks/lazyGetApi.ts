@@ -10,7 +10,9 @@ export const useLazyGetApi = () => {
     useLazyGetMethodQuery();
 
   const getApi = async (url: string, headers?: string) => {
-    console.log("api is calling");
+    console.log("URL", url);
+    console.log("HEADERS", headers);
+    
     
     await trigger({
       httpResponse: {
@@ -21,12 +23,10 @@ export const useLazyGetApi = () => {
     });
   };
 
-  
-  
   useEffect(() => {
-      if (apiData) {
-          setData(apiData);
-        }
-    }, [apiData]);
+    if (apiData) {
+      setData(apiData);
+    }
+  }, [apiData]);
   return { getApi, data, error, isLoading };
 };
