@@ -26,7 +26,6 @@ export enum ApiMethod {
   DELETE = "DELETE",
 }
 
-
 export enum LoginApiUrls {
   childSignup = "/api/v1/child/signup",
   childSignin = "/api/v1/child/signin",
@@ -40,7 +39,7 @@ export enum childApiUrls {
   postChildTask = "api/v1/task/create_task",
 }
 
-export enum commonUrls{
+export enum commonUrls {
   verifyUser = "user/verify",
 }
 export enum parentApiUrls {
@@ -55,5 +54,7 @@ export enum HomeApiUrls {
 export enum InviteMembersUrls {
   invitePartner = "/api/v1/ptask/parent/invite",
   inviteChildrens = "/api/v1/ptask/child/invite",
-  getInvites  = "api/v1/ptask/get-invite/{0}",
+  getInvites = "api/v1/ptask/get-invite/{0}",
+  resendInvite = "api/v1/ptask/resend-invite/{0}/{1}",
+  withdrawalInvite = "api/v1/ptask/delete-invite/{0}",
 }
