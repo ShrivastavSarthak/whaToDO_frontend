@@ -37,15 +37,24 @@ export const MyPeoplesDataColumns: ColumnDef<myTableInterface>[] = [
     cell: ({ row }) => {
       const id = row.original._id;
       const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-      const handleClose = (data:boolean) => {
+      const handleClose = (data: boolean) => {
         setIsModalOpen(data);
       };
       return (
         <>
-        <Button size={"sm"} onClick={() =>{setIsModalOpen(true)} }>
-          Withdraw
-        </Button>
-        <WithdrawalInvites id={id} isOpen={isModalOpen} handleModalClose={handleClose}  />
+          <Button
+            size={"sm"}
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            Withdraw
+          </Button>
+          <WithdrawalInvites
+            id={id}
+            isOpen={isModalOpen}
+            handleModalClose={handleClose}
+          />
         </>
       );
     },
@@ -55,15 +64,24 @@ export const MyPeoplesDataColumns: ColumnDef<myTableInterface>[] = [
     cell: ({ row }) => {
       const id = row.original._id;
       const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-      const handleClose = (data:boolean) => {
+      const handleClose = (data: boolean) => {
         setIsModalOpen(data);
       };
       return (
         <>
-        <Button size={"sm"} onClick={() =>{setIsModalOpen(true)} }>
-          Resend invite
-        </Button>
-        <ResendInvite id={id} isOpen={isModalOpen} handleModalClose={handleClose}  />
+          <Button
+            size={"sm"}
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          >
+            Resend invite
+          </Button>
+          <ResendInvite
+            id={id}
+            isOpen={isModalOpen}
+            handleModalClose={handleClose}
+          />
         </>
       );
     },
@@ -72,19 +90,22 @@ export const MyPeoplesDataColumns: ColumnDef<myTableInterface>[] = [
     accessorKey: "created_at",
     header: "Invited Date",
     cell: ({ row }) => {
-      return moment(row.getValue("created_at")).format("YYYY-MM-DD") 
-
-    }
+      return moment(row.getValue("created_at")).format("YYYY-MM-DD");
+    },
   },
 ];
 
 export default function MyPeoplesDataTables({
   columns,
   data,
+  isLoading,
+  isError,
 }: {
   //TODO: SAME HERE!!
   columns: ColumnDef<any>[];
   data: any[];
+  isLoading: boolean;
+  isError?: boolean;
 }) {
   const table = useReactTable({
     data,
@@ -114,7 +135,13 @@ export default function MyPeoplesDataTables({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {isLoading ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                Loading...
+              </TableCell>
+            </TableRow>
+          ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}

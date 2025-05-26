@@ -4,7 +4,6 @@ import MyPeoplesDataTables, {
   MyPeoplesDataColumns,
 } from "@/components/helpers/my_peoples/myPoplesDataTable";
 import { ApiMethod, InviteMembersUrls } from "@/shared/utils/enums/apiEnums";
-import { useLazyGetApi } from "@/shared/utils/hooks/lazyGetApi";
 import { useAppSelector } from "@/shared/utils/hooks/redux-hook";
 import { myTableInterface } from "@/shared/utils/interfaces/my_table_interface";
 import { useGetMethodQuery } from "@/shared/utils/services/dataServices";
@@ -17,7 +16,7 @@ export default function MyPeoples() {
   const [invitedMembers, setInvitedMembers] = useState<myTableInterface[]>([]);
   const user = useAppSelector((state) => state.user);
   
-  const {data:getMembers, isError,isLoading,}= useGetMethodQuery({
+  const {data:getMembers, isError,isLoading, refetch}= useGetMethodQuery({
     httpResponse:{
       reqType: ApiMethod.GET,
       url: StringFormatService(InviteMembersUrls.getInvites,[user.homeId]),
@@ -29,7 +28,7 @@ export default function MyPeoples() {
     if(getMembers){
       setInvitedMembers(getMembers?.response?.invites)
     }
-  },[isLoading,getMembers])
+  },[getMembers])
   
 
 
@@ -42,6 +41,8 @@ export default function MyPeoples() {
       <MyPeoplesDataTables
         columns={MyPeoplesDataColumns}
         data={invitedMembers}
+        isLoading={isLoading}
+        isError={isError}
       />
     </div>
   );

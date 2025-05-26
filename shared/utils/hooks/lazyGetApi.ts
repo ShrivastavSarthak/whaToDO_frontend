@@ -9,16 +9,16 @@ export const useLazyGetApi = () => {
   const [trigger, { data: apiData, error, isLoading }] =
     useLazyGetMethodQuery();
 
-  const getApi = async (url: string, headers?: string) => {
-    console.log("URL", url);
-    console.log("HEADERS", headers);
-    
-    
+  const getApi = async (
+    url: string,
+    headers?: string,
+    requestType?: string
+  ) => {
     await trigger({
       httpResponse: {
-        reqType: ApiMethod.GET,
+        reqType: requestType ?? ApiMethod.GET,
         url: url,
-        headers: headers,
+        headers: headers ?? "",
       },
     });
   };
