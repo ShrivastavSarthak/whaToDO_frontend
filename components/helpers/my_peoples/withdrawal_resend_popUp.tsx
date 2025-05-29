@@ -1,7 +1,8 @@
 import TnModal from "@/lib/wrapper/Tn_modal";
+import { removePeople } from "@/shared/store/slices/people-slice";
 import { ApiMethod, InviteMembersUrls } from "@/shared/utils/enums/apiEnums";
 import { useLazyGetApi } from "@/shared/utils/hooks/lazyGetApi";
-import { useAppSelector } from "@/shared/utils/hooks/redux-hook";
+import { useAppDispatch, useAppSelector } from "@/shared/utils/hooks/redux-hook";
 import { StringFormatService } from "@/shared/utils/services/stringFormatService";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -18,10 +19,13 @@ export function WithdrawalInvites({
     const user = useAppSelector((state) => state.user);
     const { data, error, getApi, isLoading } = useLazyGetApi();
   
+    const dispatch = useAppDispatch()
+
     useEffect(()=>{
       if (data) {
         if (data?.response?.status === 200) {
           toast.success(data?.response?.message ?? "Invitation resent successfully");
+          dispatch(removePeople(id));
           handleModalClose(false);
         } else {
           toast.error(data?.response?.message || "Failed to resend invitation");

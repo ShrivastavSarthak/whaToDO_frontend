@@ -3,8 +3,9 @@ import InviteMembers from "@/components/helpers/my_peoples/inviteMembers";
 import MyPeoplesDataTables, {
   MyPeoplesDataColumns,
 } from "@/components/helpers/my_peoples/myPoplesDataTable";
+import { setPeople } from "@/shared/store/slices/people-slice";
 import { ApiMethod, InviteMembersUrls } from "@/shared/utils/enums/apiEnums";
-import { useAppSelector } from "@/shared/utils/hooks/redux-hook";
+import { useAppDispatch, useAppSelector } from "@/shared/utils/hooks/redux-hook";
 import { myTableInterface } from "@/shared/utils/interfaces/my_table_interface";
 import { useGetMethodQuery } from "@/shared/utils/services/dataServices";
 import { StringFormatService } from "@/shared/utils/services/stringFormatService";
@@ -24,13 +25,18 @@ export default function MyPeoples() {
     }
   })
 
+  const dispatch = useAppDispatch()
+
   useEffect(()=>{
     if(getMembers){
       setInvitedMembers(getMembers?.response?.invites)
+      dispatch(setPeople(getMembers?.response?.invites))
     }
   },[getMembers])
   
+  const people = useAppSelector((state)=> state.people.people)
 
+  
 
   return (
     <div className="mx-3">
@@ -40,7 +46,7 @@ export default function MyPeoples() {
       </div>
       <MyPeoplesDataTables
         columns={MyPeoplesDataColumns}
-        data={invitedMembers}
+        data={people}
         isLoading={isLoading}
         isError={isError}
       />
