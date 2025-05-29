@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Form, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import TnModal from "@/lib/wrapper/Tn_modal";
+import { addChildrens, addPartner } from "@/shared/store/slices/people-slice";
 import { ApiMethod, InviteMembersUrls } from "@/shared/utils/enums/apiEnums";
 import usePostApi from "@/shared/utils/hooks/postApi";
-import { useAppSelector } from "@/shared/utils/hooks/redux-hook";
+import { useAppDispatch, useAppSelector } from "@/shared/utils/hooks/redux-hook";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ImCross } from "react-icons/im";
@@ -55,6 +56,8 @@ export function Invites({isApiLoading}:{isApiLoading?: (loading:boolean)=> void}
     }
   },[isLoading])
 
+  const dispatch = useAppDispatch()
+
   const onPartnerInvite = async() => {
     
     const res = await postApiCall({
@@ -67,6 +70,7 @@ export function Invites({isApiLoading}:{isApiLoading?: (loading:boolean)=> void}
     })
     
     if(res.data?.statusCode === 201){
+      dispatch(addPartner(res.data?.response?.invite))
       toast.success(res.data?.response?.message ?? "Partner Invited successfully")
       setParentInviteEmail("")
     }
@@ -92,13 +96,14 @@ export function Invites({isApiLoading}:{isApiLoading?: (loading:boolean)=> void}
     })
     
     if(res.data?.statusCode === 201){
+      dispatch(addChildrens(res.data?.response?.invite))
       toast.success(res.data?.response?.message ?? "Childrens Invited successfully")
       setInviteChildrenEmail([])
     }
     
   }
 
-
+  
   return (
     <Form {...form}>
       <div className="mt-3">
