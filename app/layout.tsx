@@ -4,6 +4,10 @@ import "./globals.css";
 import StoreProvider from "./storeProvider";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from '@vercel/speed-insights/next';
+ 
+
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -34,6 +38,7 @@ export default function RootLayout({
         <StoreProvider>
           {children}
           <Analytics />
+          <SpeedInsights />
           <Toaster position="top-right" />
         </StoreProvider>
       </body>
