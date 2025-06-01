@@ -1,10 +1,9 @@
-
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import StoreProvider from "./storeProvider";
 import { Toaster } from "sonner";
-
+import { Analytics } from "@vercel/analytics/next";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -18,7 +17,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "TaskNest",
-  description: "Task management application that helps your child stay  productive.",
+  description:
+    "Task management application that helps your child stay  productive.",
 };
 
 export default function RootLayout({
@@ -31,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <StoreProvider>{children}
+        <StoreProvider>
+          {children}
+          <Analytics />
           <Toaster position="top-right" />
         </StoreProvider>
       </body>
